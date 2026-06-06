@@ -1,0 +1,19 @@
+<svg width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gold" x1="110" y1="70" x2="500" y2="525" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8F0D5"/>
+      <stop offset="0.48" stop-color="#DCC89D"/>
+      <stop offset="1" stop-color="#B79D69"/>
+    </linearGradient>
+    <filter id="shadow" x="10" y="10" width="580" height="580" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#000000" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <rect width="600" height="600" fill="transparent"/>
+  <g filter="url(#shadow)">
+    <text x="300" y="335" fill="url(#gold)" stroke="#F4E7C0" stroke-width="3" font-family="Georgia, 'Times New Roman', serif" font-size="142" font-weight="700" text-anchor="middle">M&amp;R</text>
+    <path d="M145 408c82 48 224 50 310-8" stroke="#E6D3A7" stroke-width="12" stroke-linecap="round"/>
+    <path d="M178 178c56-36 104-40 122-12" stroke="#E6D3A7" stroke-width="8" stroke-linecap="round" opacity="0.82"/>
+    <path d="M300 166c23-30 77-26 124 12" stroke="#E6D3A7" stroke-width="8" stroke-linecap="round" opacity="0.82"/>
+  </g>
+</svg>
