@@ -224,6 +224,7 @@
         couple_name_1: "Mohamed",
         couple_name_2: "Rolla",
         wedding_date: "2026-06-13",
+        event_start_time: "7:00 PM",
         hero_subtitle: "We are honored to invite you to our engagement",
         banquet_location: "Luxury Hall",
         banquet_address: null,
@@ -247,33 +248,7 @@
 
         return aliases;
       }, {});
-      var defaultWeddinggTimeline = [
-        {
-          time: "5:30 PM",
-          title: "Guest Reception",
-          description: "We welcome our guests with love and warmth."
-        },
-        {
-          time: "6:30 PM",
-          title: "Engagement Ceremony",
-          description: "Our engagement celebration begins."
-        },
-        {
-          time: "8:00 PM",
-          title: "Dinner & Celebration",
-          description: "Dinner followed by music and celebration."
-        },
-        {
-          time: "11:30 PM",
-          title: "First Dance",
-          description: "A special moment we share with you."
-        },
-        {
-          time: "2:00 AM",
-          title: "End of the Night",
-          description: "We bid you farewell, hoping the memory stays beautiful."
-        }
-      ];
+      var defaultWeddinggTimeline = [];
       var weddinggNote = {
         heading: "",
         subtitle: "",
@@ -537,7 +512,13 @@
           var detailHeader = section.querySelector("h2");
           var detailSubtitle = section.querySelector("div.text-center.mb-8 p");
           setNodeText(detailHeader, "Location");
-          setNodeText(detailSubtitle, "We are delighted to have you join our celebration");
+          setNodeText(detailSubtitle, weddingSettings.banquet_location + " - Starts at " + weddingSettings.event_start_time);
+          Array.prototype.forEach.call(section.querySelectorAll("p, span"), function (node) {
+            var nodeText = (node.textContent || "").replace(/\s+/g, " ").trim();
+            if (/^From \d{1,2}:\d{2} to \d{1,2}:\d{2}$/i.test(nodeText)) {
+              setNodeText(node, "Starts at " + weddingSettings.event_start_time);
+            }
+          });
           setNodeSource(section.querySelector("div.-mx-5 img, div.-mx-6 img"), detailImage);
         } else if (role === "steps") {
           var timelineCards = Array.prototype.filter.call(section.querySelectorAll("div"), function (node) {
