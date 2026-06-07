@@ -28,6 +28,19 @@
       --mobile-shell-top: 0px;
       --mobile-shell-height: 100vh;
       --mobile-shell-radius: 0px;
+      color-scheme: light;
+    }
+
+    html,
+    html.dark,
+    body,
+    body.dark {
+      color-scheme: light !important;
+    }
+
+    html.dark,
+    body.dark {
+      background: #f6f1e5 !important;
     }
 
     body[data-brand-ready="true"][data-force-mobile-shell="true"] {
@@ -124,32 +137,46 @@
       box-shadow: 0 28px 90px rgba(72, 69, 58, 0.24);
     }
 
-    body[data-brand-ready="true"][data-force-mobile-shell="true"] button.fixed.bottom-6.right-6.z-50 {
+    body[data-brand-ready="true"][data-force-mobile-shell="true"] button.fixed.bottom-6.right-6.z-50,
+    body[data-brand-ready="true"][data-force-mobile-shell="true"] #sound-toggle-button {
       left: calc(var(--mobile-shell-left) + var(--mobile-shell-width) - 4.5rem) !important;
       right: auto !important;
       bottom: calc(var(--mobile-shell-top) + 1rem) !important;
     }
 
-    .template-gallery-link {
+    #sound-toggle-button {
       position: fixed;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 70;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 90;
+      width: 2.75rem;
+      height: 2.75rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 0.8rem 1.2rem;
+      border: 0;
       border-radius: 999px;
-      text-decoration: none;
-      background: rgba(255, 250, 240, 0.78);
-      color: rgba(75, 69, 57, 0.88);
-      border: 1px solid rgba(123, 128, 102, 0.2);
-      box-shadow: 0 18px 36px rgba(72, 69, 58, 0.12);
+      background: hsl(var(--primary) / 0.9);
+      color: hsl(var(--primary-foreground));
+      box-shadow: 0 12px 30px rgba(72, 69, 58, 0.22);
+      cursor: pointer;
       backdrop-filter: blur(12px);
-      font-size: 0.72rem;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
+      transition: background 180ms ease, transform 180ms ease;
+    }
+
+    #sound-toggle-button:hover {
+      background: hsl(var(--primary));
+      transform: translateY(-1px);
+    }
+
+    #sound-toggle-button svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
     }
 
     body[data-brand-ready="true"][data-force-mobile-shell="true"] footer.relative.text-center.bg-cover.bg-bottom.min-h-\[500px\] {
@@ -203,8 +230,6 @@
       }
     }
   </style>
-  <script src="./scripts/weddingg-templates.js"></script>
-  <script src="./scripts/template-catalog.js"></script>
   <script>
     (function () {
       var brandTitle = "Mohamed & Rolla Engagement";
@@ -212,14 +237,7 @@
       var oldMusicPath = "/assets/intro-music-CzqJOUtA.mp3";
       var customMusicPath = "song.mp3";
       var weddingGuestCollection = "mohamed_rolla_guests";
-      var firebaseConfig = {
-        apiKey: "AIzaSyD-DtwHj1HKR-W4jbnJOyahtDAwBorh5Tk",
-        authDomain: "mazloum-82a65.firebaseapp.com",
-        projectId: "mazloum-82a65",
-        storageBucket: "mazloum-82a65.firebasestorage.app",
-        messagingSenderId: "259488054973",
-        appId: "1:259488054973:web:ec476997df6aa2777501d4"
-      };
+
       var weddingSettings = {
         couple_name_1: "Mohamed",
         couple_name_2: "Rolla",
@@ -231,23 +249,6 @@
         banquet_maps_url: "https://share.google/iIrm9ht3vCJY0lkcl"
       };
       var hiddenSectionRoles = ["accommodation", "transport", "gifts", "photo-strip", "faq", "rsvp", "note", "steps"];
-      var weddinggTemplates = window.__WEDDINGG_TEMPLATES__ || {};
-      var weddinggTemplateCatalog = window.__TEMPLATE_CATALOG__ || [];
-      var weddinggTemplateAliases = weddinggTemplateCatalog.reduce(function (aliases, item) {
-        if (!item) {
-          return aliases;
-        }
-
-        if (item.pathSlug && item.sourceSlug) {
-          aliases[item.pathSlug] = item.sourceSlug;
-        }
-
-        if (item.sourceSlug) {
-          aliases[item.sourceSlug] = item.sourceSlug;
-        }
-
-        return aliases;
-      }, {});
       var defaultWeddinggTimeline = [];
       var weddinggNote = {
         heading: "",
@@ -292,44 +293,7 @@
         timelineBackdropImage: "assets/weddingg-templates/basel-tamara-template/footerImageUrl.png",
         timeline: defaultWeddinggTimeline
       };
-      function resolveWeddinggTemplateKey(candidate) {
-        if (!candidate) {
-          return "";
-        }
-
-        return weddinggTemplateAliases[candidate] || candidate;
-      }
-      function resolveSelectedWeddinggTemplate() {
-        var candidates = [];
-
-        try {
-          var params = new URLSearchParams(window.location.search);
-          var queryTemplate = params.get("template");
-          if (queryTemplate) {
-            candidates.push(queryTemplate);
-          }
-        } catch (error) { }
-
-        window.location.pathname.split("/").filter(Boolean).forEach(function (segment) {
-          candidates.push(segment);
-        });
-
-        candidates.push("chateau-wedding");
-        candidates.push("mohamed-laila-template");
-        candidates.push("sur-la-terrasse");
-        candidates.push("weddingg-templates");
-        candidates.push("mohamed-laila-template");
-
-        for (var index = 0; index < candidates.length; index += 1) {
-          var candidate = resolveWeddinggTemplateKey(candidates[index]);
-          if (candidate && weddinggTemplates[candidate]) {
-            return weddinggTemplates[candidate];
-          }
-        }
-
-        return fallbackWeddinggTemplate;
-      }
-      var weddinggTemplate = resolveSelectedWeddinggTemplate();
+      var weddinggTemplate = fallbackWeddinggTemplate;
       weddinggTemplate = Object.assign({}, weddinggTemplate, {
         assetOverrides: Object.assign({}, weddinggTemplate.assetOverrides || {}, {
           "/assets/intro-video-COwNkWte.mov": "assets/weddingg-templates/omar-salma-templateee/introVideoUrl.mp4",
@@ -588,8 +552,115 @@
 
           if (text === "تفتح الدعوة تلقائيًا") {
             node.style.display = "none";
-          } else if (text === "Browse Styles") {
-            node.style.display = "none";
+          }
+        });
+      }
+
+      function isSoundToggleTarget(target) {
+        var node = target && target.closest ? target.closest("button") : null;
+        if (!node) {
+          return false;
+        }
+
+        var label = node.getAttribute("aria-label") || "";
+        return node.id === "sound-toggle-button" || /^(Mute|Unmute)$/i.test(label);
+      }
+
+      function getSoundToggleIcon(isPlaying) {
+        if (isPlaying) {
+          return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M18.5 5.5a9 9 0 0 1 0 13"></path></svg>';
+        }
+
+        return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"></path><path d="m16 9 5 5"></path><path d="m21 9-5 5"></path></svg>';
+      }
+
+      function updateSoundToggleButton() {
+        var button = document.getElementById("sound-toggle-button");
+        var audio = document.querySelector("audio");
+        if (!button || !audio) {
+          return;
+        }
+
+        var isPlaying = !audio.muted && !audio.paused;
+        button.setAttribute("aria-label", isPlaying ? "Mute" : "Unmute");
+        button.innerHTML = getSoundToggleIcon(isPlaying);
+      }
+
+      function ensureSoundToggleButton() {
+        Array.prototype.forEach.call(document.querySelectorAll('button[aria-label="Mute"], button[aria-label="Unmute"]'), function (button) {
+          if (button.id !== "sound-toggle-button") {
+            button.remove();
+          }
+        });
+
+        var audio = document.querySelector("audio");
+        if (!audio || document.getElementById("sound-toggle-button")) {
+          updateSoundToggleButton();
+          return;
+        }
+
+        var button = document.createElement("button");
+        button.id = "sound-toggle-button";
+        button.type = "button";
+        var handledPointerDown = false;
+        button.addEventListener("pointerdown", function (event) {
+          if (!audio.muted && !audio.paused) {
+            return;
+          }
+
+          handledPointerDown = true;
+          event.preventDefault();
+          event.stopPropagation();
+          unmutAndPlay(audio);
+        });
+
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          if (handledPointerDown) {
+            handledPointerDown = false;
+            return;
+          }
+
+          if (audio.muted || audio.paused) {
+            unmutAndPlay(audio);
+          } else {
+            audio.muted = true;
+            updateSoundToggleButton();
+          }
+        });
+
+        audio.addEventListener("play", updateSoundToggleButton);
+        audio.addEventListener("pause", updateSoundToggleButton);
+        audio.addEventListener("volumechange", updateSoundToggleButton);
+
+        document.body.appendChild(button);
+        updateSoundToggleButton();
+      }
+
+      function enforceLightTheme() {
+        document.documentElement.classList.remove("dark");
+        document.body.classList.remove("dark");
+        document.documentElement.style.colorScheme = "light";
+        document.body.style.colorScheme = "light";
+
+        try {
+          window.localStorage.setItem("theme", "light");
+          window.localStorage.setItem("vite-ui-theme", "light");
+          window.localStorage.setItem("color-theme", "light");
+        } catch (error) { }
+
+        Array.prototype.forEach.call(document.querySelectorAll("button"), function (button) {
+          if (isSoundToggleTarget(button)) {
+            return;
+          }
+
+          var label = button.getAttribute("aria-label") || "";
+          var text = (button.textContent || "").replace(/\s+/g, " ").trim();
+
+          if (/theme|mode|light|dark|day|night/i.test(label) || /^(Light|Dark|Day|Night)$/i.test(text)) {
+            button.remove();
           }
         });
       }
@@ -1024,7 +1095,11 @@
           var self = this;
           var result = _origPlay.call(self);
           if (result && typeof result.catch === "function") {
-            return result.catch(function () {
+            return result.catch(function (error) {
+              if (self.dataset && self.dataset.userPlaybackRequest === "true") {
+                throw error;
+              }
+
               self.muted = true;
               return _origPlay.call(self).then(function () {
                 self.muted = false;
@@ -1040,8 +1115,32 @@
         audio.muted = false;
         if (!audio.volume || audio.volume < 0.35) { audio.volume = 0.5; }
         if (audio.paused) {
+          if (audio.dataset) {
+            audio.dataset.userPlaybackRequest = "true";
+          }
+
           var p = audio.play();
-          if (p && typeof p.catch === "function") { p.catch(function () {}); }
+          if (p && typeof p.catch === "function") {
+            p.then(function () {
+              if (audio.dataset) {
+                delete audio.dataset.userPlaybackRequest;
+              }
+              updateSoundToggleButton();
+            }, function () {
+              audio.muted = false;
+              if (audio.dataset) {
+                delete audio.dataset.userPlaybackRequest;
+              }
+              updateSoundToggleButton();
+            });
+          } else {
+            if (audio.dataset) {
+              delete audio.dataset.userPlaybackRequest;
+            }
+            updateSoundToggleButton();
+          }
+        } else {
+          updateSoundToggleButton();
         }
       }
 
@@ -1052,9 +1151,21 @@
 
       function bindAudioUnlockers() {
         ["click", "pointerdown", "touchstart", "keydown", "scroll"].forEach(function (eventName) {
-          document.addEventListener(eventName, function () {
+          document.addEventListener(eventName, function (event) {
             var audio = document.querySelector("audio");
             if (!audio) return;
+
+            if (isSoundToggleTarget(event.target)) {
+              if (eventName === "click") {
+                window.setTimeout(function () {
+                  if (!audio.muted) {
+                    unmutAndPlay(audio);
+                  }
+                }, 0);
+              }
+              return;
+            }
+
             if (audio.muted || audio.paused) { unmutAndPlay(audio); }
           }, { passive: true });
         });
@@ -1063,6 +1174,9 @@
       var layoutOverrideScheduled = false;
 
       function applyLayoutOverrides() {
+        enforceLightTheme();
+        ensureSoundToggleButton();
+
         Array.prototype.forEach.call(document.querySelectorAll("*"), function (element) {
           if (!element.style) {
             return;
